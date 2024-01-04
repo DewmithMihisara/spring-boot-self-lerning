@@ -1,0 +1,15 @@
+package lk.ijse.databaseConnected.service;
+
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
+import lk.ijse.databaseConnected.entity.Product;
+
+@Service
+public interface ProductService {
+    List<Product> getAllProducts();
+    Product createProduct(Product product);
+    Product getProductById(Long id);
+    Product updateProduct(Long id,Product product);
+}
