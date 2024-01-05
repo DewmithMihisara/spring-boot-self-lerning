@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import lk.ijse.databaseConnected.dto.ProductDTO;
 import lk.ijse.databaseConnected.entity.Product;
 import lk.ijse.databaseConnected.service.ProductService;
 
@@ -25,9 +26,9 @@ public class ProductController {
     }
 
     @PostMapping("/products")
-    public ResponseEntity<Product> createProduct(@RequestBody Product product){
+    public ResponseEntity<Product> createProduct(@RequestBody ProductDTO productDTO){
         try{
-            return ResponseEntity.status(HttpStatus.CREATED).body(productService.createProduct(product));
+            return ResponseEntity.status(HttpStatus.CREATED).body(productService.createProduct(productDTO));
         }catch(Exception e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
@@ -46,5 +47,10 @@ public class ProductController {
     @PostMapping("/products/{id}")
     public Product updateProduct(@RequestBody Long id,@PathVariable Product product){
         return productService.updateProduct(id, product);
+    }
+
+    @GetMapping("/products/{id}/product")
+    public ResponseEntity<List<Product>> getProductByCategory(@PathVariable Long id){
+        return ResponseEntity.status(HttpStatus.OK).body(productService.getProductByCategory(id));
     }
 }

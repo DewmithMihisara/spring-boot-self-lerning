@@ -5,7 +5,10 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import lk.ijse.databaseConnected.dto.ProductDTO;
+import lk.ijse.databaseConnected.entity.Categories;
 import lk.ijse.databaseConnected.entity.Product;
+import lk.ijse.databaseConnected.repository.CategoryRepository;
 import lk.ijse.databaseConnected.repository.ProductRepository;
 import lk.ijse.databaseConnected.service.ProductService;
 @Service
@@ -13,14 +16,28 @@ public class ProducrServiceImpl implements ProductService{
     @Autowired
     private ProductRepository productRepository;
 
+    @Autowired
+    private CategoryRepository categoryRepository;
+
     @Override
     public List<Product> getAllProducts() {
         return productRepository.findAll();
     }
 
     @Override
-    public Product createProduct(Product product) {
-        return productRepository.save(product);
+    public Product createProduct(ProductDTO productdDto) {
+        Categories categories=categoryRepository.findById(productdDto.getCategoryId()).orElse(null);
+
+        if (categories == null) {
+            Product product = new Product();
+            product.setName(productdDto.getName());
+            product.setPrice(productdDto.getPrice());
+            product.setCategory(categories);
+            product.setQtty(productdDto.getQtty());
+            return productRepository.save(product);
+        }else{
+            return null;
+        }
     }
 
     @Override
@@ -39,5 +56,14 @@ public class ProducrServiceImpl implements ProductService{
         }
         return null;
     }
-    
+    @Override
+    public List<Product> getProductByCategory(Long category) {
+        Categories categories=categoryRepository.findById(category).orElse(null);
+
+        if (categories!=null) {
+            return productRepository.findByCategory(categories);
+        }else{
+            return null;
+        }
+    }
 }
