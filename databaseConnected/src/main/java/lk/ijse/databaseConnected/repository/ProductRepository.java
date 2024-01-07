@@ -12,6 +12,6 @@ import lk.ijse.databaseConnected.entity.Product;
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long>{
     
-    @Query("SELECT p FROM Product WHERE p.categories = :categories")
-    List<Product> findByCategory(@Param("category") Categories category);
+    @Query("SELECT p FROM Product p WHERE p.category = :category")
+    List<Product> findProductsByCategory(@Param("category") Categories category);
 }

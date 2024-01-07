@@ -1,6 +1,7 @@
 package lk.ijse.databaseConnected.service.impl;
 
 import java.util.List;
+import java.util.Locale.Category;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,10 +14,10 @@ import lk.ijse.databaseConnected.repository.ProductRepository;
 import lk.ijse.databaseConnected.service.ProductService;
 @Service
 public class ProducrServiceImpl implements ProductService{
-    @Autowired
+     @Autowired
     private ProductRepository productRepository;
 
-    @Autowired
+    @Autowired 
     private CategoryRepository categoryRepository;
 
     @Override
@@ -25,19 +26,22 @@ public class ProducrServiceImpl implements ProductService{
     }
 
     @Override
-    public Product createProduct(ProductDTO productdDto) {
-        Categories categories=categoryRepository.findById(productdDto.getCategoryId()).orElse(null);
+    public Product createProduct(ProductDTO productDTO) {
+        Categories category = categoryRepository.findById(productDTO.getCategoryId()).orElse(null);
 
-        if (categories == null) {
+        if(category != null) {
             Product product = new Product();
-            product.setName(productdDto.getName());
-            product.setPrice(productdDto.getPrice());
-            product.setCategory(categories);
-            product.setQtty(productdDto.getQtty());
+            product.setName(productDTO.getName());
+            product.setPrice(productDTO.getPrice());
+            product.setQtty(productDTO.getQtty());
+            product.setCategory(category);
+            
             return productRepository.save(product);
-        }else{
+        } else {
             return null;
         }
+
+        
     }
 
     @Override
@@ -48,21 +52,26 @@ public class ProducrServiceImpl implements ProductService{
     @Override
     public Product updateProduct(Long id, Product product) {
         Product existingProduct = productRepository.findById(id).orElse(null);
-        if (existingProduct != null) {
-            existingProduct.setName(product.getName());
-            existingProduct.setPrice(product.getPrice());
-            existingProduct.setCategory(product.getCategory());
-            return productRepository.save(existingProduct);
-        }
-        return null;
-    }
-    @Override
-    public List<Product> getProductByCategory(Long category) {
-        Categories categories=categoryRepository.findById(category).orElse(null);
 
-        if (categories!=null) {
-            return productRepository.findByCategory(categories);
-        }else{
+        if(existingProduct != null) {
+            existingProduct.setName(product.getName());
+            existingProduct.setCategory(product.getCategory());
+            existingProduct.setPrice(product.getPrice());
+            existingProduct.setQtty(product.getQtty());
+            
+            return productRepository.save(existingProduct);
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public List<Product> getProductsByCategory(Long id) {
+        Categories category = categoryRepository.findById(id).orElse(null);
+
+        if(category != null) {
+            return productRepository.findProductsByCategory(category);
+        } else {
             return null;
         }
     }
